@@ -16,18 +16,12 @@ func (r rot13Reader) Read(b []byte) (n int, err error) {
 	}
 
 	for i := 0; i < n; i++ {
-		var s, e byte
-		if b[i] >= 'a' && b[i] <= 'z' {
-			s = 'a'
-			e = 'z' - s
-		} else if b[i] >= 'A' && b[i] <= 'Z' {
-			s = 'A'
-			e = 'Z' - s
-		} else {
-			continue
+		switch {
+		case b[i] >= 'a' && b[i] <= 'z':
+			b[i] = 'a' + (b[i]-'a'+13)%26
+		case b[i] >= 'A' && b[i] <= 'Z':
+			b[i] = 'A' + (b[i]-'A'+13)%26
 		}
-
-		b[i] = ((b[i] - s + 13) % (e + 1)) + s
 	}
 
 	return
